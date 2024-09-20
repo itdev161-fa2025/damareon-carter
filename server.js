@@ -1,6 +1,9 @@
 const express = require('express');
+const db = require('./config/db');
 
 let app = express();
+
+db.connectDatabase();
 
 app.get('/', (req, res) => res.send('HTTP GET request sent to root API endpoint'));
 
