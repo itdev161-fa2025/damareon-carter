@@ -2,12 +2,14 @@ const express = require('express');
 const db = require('./config/db');
 const check = require('express-validator').check;
 const validationResult = require('express-validator').validationResult;
+const cors = require('cors');
 
 let app = express();
 
 db.connectDatabase();
 
 app.use(express.json({ extended: false }));
+app.use(cors({ origin: "http://localhost:3000" }));
 
 app.get('/', (req, res) => res.send('HTTP GET request sent to root API endpoint'));
 app.post('/api/users',
@@ -25,5 +27,5 @@ app.post('/api/users',
     }
 );
 
-
-app.listen(3000, () => console.log('Express server running on port 3000'));
+const PORT = 5000;
+app.listen(PORT, () => console.log(`Express server running on port ${PORT}`));
