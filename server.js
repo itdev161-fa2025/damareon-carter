@@ -5,6 +5,8 @@ const validationResult = require('express-validator').validationResult;
 const cors = require('cors');
 const User = require('./models/User').User;
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const config = require('config');
 
 let app = express();
 
@@ -43,7 +45,21 @@ app.post('/api/users',
                 user.password = await bcrypt.hash(password, salt);
 
                 await user.save();
-                res.send("User successfully registered");
+
+                const payload = {
+                    user: { id: user.id }
+                };
+
+                jwt.sign(
+                    payload,
+                    config.get('jwtSecret'),
+                    { expiresIn: '10hr' },
+                    (err, token) =>
+                    {
+                        if (err) throw err;
+                        res.json({ token: token })
+                    }
+                );
 
             } catch (error)
             {
