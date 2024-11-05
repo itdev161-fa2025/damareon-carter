@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
 import axios from 'axios';
+import { Routes, Route, Link } from "react-router-dom";
 
 class App extends React.Component
 {
@@ -21,9 +22,20 @@ class App extends React.Component
         return (
             <div className='App'>
                 <header className='App-header'>
-                    GoodThings
+                    <h1>GoodThings</h1>
+                    <ul>
+                        <li><Link to="/"></Link></li>
+                        <li><Link to="/register"></Link></li>
+                        <li><Link to="/login"></Link></li>
+                    </ul>
                 </header>
-                (this.state.data)
+                <main>
+                    <Routes>
+                        <Route path="/"/>
+                        <Route path="/register"/>
+                        <Route path="/login"/>
+                    </Routes>
+                </main>
             </div>
         );
     }

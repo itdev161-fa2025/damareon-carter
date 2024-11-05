@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const config = require('config');
+import { connect } from 'mongoose';
+import config from 'config';
 
 const db = config.get('mongoURI');
 
@@ -7,7 +7,7 @@ const connectDatabase = async () =>
 {
     try
     {
-        await mongoose.connect(db, { useUnifiedTopology: true });
+        await connect(db, { useUnifiedTopology: true });
         console.log('Connected to MongoDB');
     }
     catch (error)
@@ -17,4 +17,5 @@ const connectDatabase = async () =>
     }
 }
 
-module.exports.connectDatabase = connectDatabase;
+const _connectDatabase = connectDatabase;
+export { _connectDatabase as connectDatabase };

@@ -1,18 +1,18 @@
-const express = require('express');
-const db = require('./config/db');
-const check = require('express-validator').check;
-const validationResult = require('express-validator').validationResult;
-const cors = require('cors');
-const User = require('./models/Users').User;
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const config = require('config');
+import express, { json } from 'express';
+import { connectDatabase } from './config/db.js';
+import { check } from 'express-validator';
+import { validationResult } from 'express-validator';
+import cors from 'cors';
+import { User } from './models/Users.js';
+import bcryptjs from 'bcryptjs';
+import jsonwebtoken from 'jsonwebtoken';
+import config  from 'config';
 
 let app = express();
 
-db.connectDatabase();
+connectDatabase();
 
-app.use(express.json({ extended: false }));
+app.use(json({ extended: false }));
 app.use(cors({ origin: "http://localhost:3000" }));
 
 app.get('/', (req, res) => res.send('HTTP GET request sent to root API endpoint'));
@@ -41,8 +41,8 @@ app.post('/api/users',
                 }
 
                 user = new User({ name: name, email: email, password: password });
-                const salt = await bcrypt.genSalt(10);
-                user.password = await bcrypt.hash(password, salt);
+                const salt = await bcryptjs.genSalt(10);
+                user.password = await bcryptjs.hash(password, salt);
 
                 await user.save();
 
@@ -50,7 +50,7 @@ app.post('/api/users',
                     user: { id: user.id }
                 };
 
-                jwt.sign(
+                jsonwebtoken.sign(
                     payload,
                     config.get('jwtSecret'),
                     { expiresIn: '10hr' },
