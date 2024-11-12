@@ -80,8 +80,8 @@ class App extends React.Component
                 <main>
                     <Routes>
                         <Route path="/" element={<Home user={user} data={data} />}/>
-                        <Route path="/register" element={<Register/>}/>
-                        <Route path="/login" element={<Login/>}/>
+                        <Route path="/register" element={<Register {...authProps} />}/>
+                        <Route path="/login" element={<Login {...authProps} />}/>
                     </Routes>
                 </main>
             </div>
