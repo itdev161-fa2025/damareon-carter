@@ -47,21 +47,7 @@ app.post('/api/users',
 
                 await user.save();
 
-                const payload = {
-                    user: { id: user.id }
-                };
-
-                jsonwebtoken.sign(
-                    payload,
-                    config.get('jwtSecret'),
-                    { expiresIn: '10hr' },
-                    (err, token) =>
-                    {
-                        if (err) throw err;
-                        res.json({ token: token })
-                    }
-                );
-
+                returnToken(user, res);
             } catch (error)
             {
                 res.status(500).send("Server error");
@@ -76,7 +62,51 @@ app.get('/api/auth', auth, async (req, res) => {
     } catch (error) {
         res.status(500).send("Unkown server error");
     }
-})
+});
+app.post('/api/login',
+    [
+        check('email', "Please enter a valid email").isEmail(),
+        check('password', "A password is required").exists()
+    ],
+    async (req, res) => {
+        const errors = validationResult(req);
+
+        if(!errors.isEmpty()) {
+            return res.status(422).json({ errors: errors.array() });
+        } else {
+            const { email, password } = req.body;
+
+            try {
+                let user = await User.findOne({ email: email });
+
+                if (!user) {
+                    return res.status(400).json({ errors: [{ msg: "Invalid email or password" }]});
+                }
+
+                const match = await bcryptjs.compare(password, user.password);
+                if (!match) {
+                    return res.status(400).json({ errors: [{ msg: "Invalid email or password" }]});
+                }
+
+                returnToken(user, res);
+            } catch (error) {
+                res.status(500).send("Server error");
+            }
+        }
+    }
+);
+const returnToken = (user, res) => {
+    const payload = {
+        user: {
+            id: user.id
+        }
+    };
+
+    jsonwebtoken.sign(payload, config.get('jwtSecret'), { expiresIn: '10hr' }, (err, token) => {
+        if (err) throw err;
+        res.json({ token: token });
+    });
+};
 
 const PORT = 5000;
 app.listen(PORT, () => console.log(`Express server running on port ${PORT}`));

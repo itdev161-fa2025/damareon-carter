@@ -6,9 +6,7 @@ const auth = (req, res, next) => {
     const secret = config.get('jwtSecret');
 
     if (!token) {
-        return res
-            .status(401)
-            .json({ message: "Missing authentication token. Authorization failed." })
+        return res.status(401).json({ message: "Missing authentication token. Authorization failed." })
     }
 
     try {
@@ -17,9 +15,7 @@ const auth = (req, res, next) => {
 
         next();
     } catch (error) {
-        res
-            .status(401)
-            .json({ message: "Invalid authentication token. Authorization failed." })
+        res.status(401).json({ message: "Invalid authentication token. Authorization failed." })
     }
 }
 
