@@ -51,8 +51,6 @@ const Register = ({ authenticateUser }) => {
                 localStorage.removeItem('token');
                 
                 setErrorData({ ...errors, errors: error.response.data.errors });
-
-                return;
             }
 
             authenticateUser();
