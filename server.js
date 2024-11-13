@@ -25,6 +25,16 @@ app.get('/api/auth', auth, async (req, res) => {
         res.status(500).send("Unkown server error");
     }
 });
+app.get('/api/posts', auth, async (req, res) => {
+    try {
+        const posts = await Post.find().sort({ date: -1 });
+
+        res.json(posts);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Server error");
+    }
+})
 app.post('/api/users',
     [
         check('name', "Please enter your name").not().isEmpty(),
