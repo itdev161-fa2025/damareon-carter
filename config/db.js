@@ -17,5 +17,4 @@ const connectDatabase = async () =>
     }
 }
 
-const _connectDatabase = connectDatabase;
-export { _connectDatabase as connectDatabase };
+export default connectDatabase;
